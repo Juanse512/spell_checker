@@ -443,11 +443,15 @@ void free_list(Word * word){
     free_list(next);
 }
 
-void free_all(char * dictionary[], Word ** hashTable, int tableSize, int dicSize)
+void free_all(char * dictionary[], Word ** hashTable, int tableSize, int dicSize, Suggestion ** suggestion, int suggestionCounter)
 {   
     printf("%d %d\n", dicSize, tableSize);
     for(int i = 0; i < dicSize; i++){
         free(dictionary[i]); //free elements inside
+    }
+    for(int i = 0; i < suggestionCounter; i++){
+        free(suggestion[i]->word);
+        free(suggestion[i]); //free elements inside
     }
     for(int i = 0; i < tableSize; i++){
         free_list(hashTable[i]);
@@ -479,7 +483,7 @@ Word ** suggest_word(char * word, char * dictionary[], int dicSize, Word ** hash
 
 char * parse_word(char * word)
 {
-    char * parsedWord = malloc(sizeof(char) * strlen(word) + 1);
+    char * parsedWord = malloc(sizeof(char) * strlen(word) + 2);
     int counter = 0; 
     for(int i = 0; i < strlen(word); i++){
         if(isalpha(word[i])){
@@ -503,7 +507,6 @@ int main(int argc, char *argv[])
     Word ** acceptedWords;
     int acceptedWordsCounter = 0;
     int suggestionCounter = readfile_suggestion(argv[2], suggestion);
-    printf("%s\n", argv[2]);
     for(int i = 0; i < suggestionCounter; i++){
         char * parsed = parse_word(suggestion[i]->word);
         if(!find_word(parsed, dictionary, hashTable, tableSize)){
@@ -518,6 +521,6 @@ int main(int argc, char *argv[])
         }
         free(parsed);
     }
-    free_all(dictionary, hashTable, tableSize, dicSize);
+    free_all(dictionary, hashTable, tableSize, dicSize, suggestion, suggestionCounter);
     return 0;
 }
