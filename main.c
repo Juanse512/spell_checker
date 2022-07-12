@@ -5,11 +5,17 @@
 #include <math.h>
 #define MAX_LEN 1000000
 
+
 typedef struct WordStruct{
   int index;
+  char * word;
   unsigned int hash;
   struct WordStruct* next;
 } Word;
+
+int apply_rules(int counter, char * word, char * dictionary[], Word ** hash_table, int table_size, Word * acceptedWords[], int * acceptedWordsSize);
+
+
 
 
 static inline void quit(const char *s)
@@ -69,7 +75,7 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed )
 	return h;
 } 
 
-unsigned int hash_first(char * word, int counter)
+unsigned int hash_first(char * word)
 {
     
     int len = strlen(word);
@@ -105,6 +111,27 @@ Word * insert_word(int index, Word * word, unsigned int hash)
     return word;
 }
 
+void insert_word_result(char * word, Word ** acceptedWords, int * acceptedWordsSize){
+    if(*acceptedWordsSize >= 5) return;
+    int flag = 0;
+    unsigned int wordHash = hash_first(word);
+    for(int i = 0; i < *acceptedWordsSize; i++){
+        if(acceptedWords[i] != NULL){
+            if(acceptedWords[i]->hash == wordHash){
+                flag = 1;
+            }
+        }
+    }
+    if(flag == 0){
+        acceptedWords[*acceptedWordsSize] = malloc(sizeof(Word));
+        acceptedWords[*acceptedWordsSize]->hash = wordHash;
+        acceptedWords[*acceptedWordsSize]->word = malloc(sizeof(char) * strlen(word));
+        memcpy(acceptedWords[*acceptedWordsSize]->word, word, strlen(word) + 1); 
+        (*acceptedWordsSize)++;
+    }
+    return;
+}
+
 Word ** hash_words(char * dictionary[], int counter, int * size)
 {
     int table_size = ceil(counter / 0.7);
@@ -116,7 +143,7 @@ Word ** hash_words(char * dictionary[], int counter, int * size)
     
     for(int i = 0; i < counter; i++)
     {
-        first_hash = hash_first(dictionary[i], table_size);
+        first_hash = hash_first(dictionary[i]);
         // second_hash = hash_second(dictionary[i], table_size);
         
         position = first_hash % table_size;
@@ -173,7 +200,7 @@ int readfile(const char *path, char * dictionary[])
 
 int find_word(char * word, char * dictionary[], Word ** hash_table, int table_size)
 {
-    unsigned int first_hash = hash_first(word, table_size);
+    unsigned int first_hash = hash_first(word);
     unsigned int position = first_hash % table_size;
     int second_hash = 0, collision = 1, flag = 1;
     
@@ -203,95 +230,113 @@ int check_len(char ** array[], int counter, int array_size)
     return newSize;
 }
 
-int switch_characters(char * word, char ** result_arrayP[], int counter, int * array_size)
+void switch_characters(char * word, Word * acceptedWords[], int * acceptedWordsSize, int counter, char * dictionary[], Word ** hash_table, int table_size)
 {
     int len = strlen(word);
     char aux;
-    char ** result_array = *result_arrayP;
+    char * wordRule;
     for(int i = 0; i < len - 1; i++)
     {
-        *array_size = check_len(result_arrayP, counter, *array_size);
-        result_array = *result_arrayP;
-        result_array[counter] = malloc(sizeof(char) * (len + 1));
+        wordRule = malloc(sizeof(char) * (len + 1));
         
-        memcpy(result_array[counter], word, len + 1);
+        memcpy(wordRule, word, len + 1);
         
-        aux = result_array[counter][i];
+        aux = wordRule[i];
         
-        result_array[counter][i] = result_array[counter][i + 1];
+        wordRule[i] = wordRule[i + 1];
         
-        result_array[counter][i + 1] = aux;
-        
-        counter++;
+        wordRule[i + 1] = aux;
+        if(counter == 0){
+            if(find_word(wordRule, dictionary, hash_table, table_size)){
+                // printf("%s\n", wordRule);
+                insert_word_result(wordRule, acceptedWords, acceptedWordsSize);
+            }
+        }else{
+            apply_rules(counter - 1, wordRule, dictionary, hash_table, table_size, acceptedWords, acceptedWordsSize);         
+        }
+        free(wordRule);
+
     }
-    return counter;
+    return;
 }
-int insert_characters(char * word, char ** result_arrayP[], int counter, int * array_size)
+void insert_characters(char * word, Word * acceptedWords[], int * acceptedWordsSize, int counter, char * dictionary[], Word ** hash_table, int table_size)
 {
     int len = strlen(word);
-    char ** result_array = *result_arrayP;
+    char * wordRule;
+    // printf("%d\n", counter);
     for(int i = 0; i <= len; i++){
         for(char j = 97; j < 123; j++){
-            *array_size = check_len(result_arrayP, counter, *array_size);
-            result_array = *result_arrayP;
-            result_array[counter] = malloc(sizeof(char) * (len + 2));
+            wordRule = malloc(sizeof(char) * (len + 2));
 
-            memcpy(result_array[counter], word, (len - (len - i)) + 1);
-            memcpy(result_array[counter] + (i + 1), word + i, (len - i) + 1);
+            memcpy(wordRule, word, (len - (len - i)) + 1);
+            memcpy(wordRule + (i + 1), word + i, (len - i) + 1);
             
-            result_array[counter][i] = j;
-
-            // printf("%s\n", result_array[counter]);
-
-            counter++;
+            wordRule[i] = j;
+            
+            if(counter == 0){
+                if(find_word(wordRule, dictionary, hash_table, table_size)){
+                    insert_word_result(wordRule, acceptedWords, acceptedWordsSize);
+                    // printf("%s\n", wordRule);
+                }
+            }else{
+                apply_rules(counter - 1, wordRule, dictionary, hash_table, table_size, acceptedWords, acceptedWordsSize);
+            }
+            free(wordRule);
         }
     }
-    return counter;
+    return;
 }
 
-int change_characters(char * word, char ** result_arrayP[], int counter, int * array_size)
+void change_characters(char * word, Word * acceptedWords[], int * acceptedWordsSize, int counter, char * dictionary[], Word ** hash_table, int table_size)
 {
     int len = strlen(word);
-    char ** result_array = *result_arrayP;
+    char * wordRule;
     for(int i = 0; i < len; i++){
         for(char j = 97; j < 123; j++){
-            *array_size = check_len(result_arrayP, counter, *array_size);
-            result_array = *result_arrayP;
             // printf("%d\n", counter);
-            result_array[counter] = malloc(sizeof(char) * (len + 1));
-            memcpy(result_array[counter], word, len + 1);
-            result_array[counter][i] = j;
+            wordRule = malloc(sizeof(char) * (len + 1));
+            memcpy(wordRule, word, len + 1);
+            wordRule[i] = j;
 
-            // printf("%s\n", result_array[counter]);
-
-            counter++;
+            if(counter == 0){
+                if(find_word(wordRule, dictionary, hash_table, table_size)){
+                    insert_word_result(wordRule, acceptedWords, acceptedWordsSize);
+                    // printf("%s\n", wordRule);
+                }
+            }else{
+                apply_rules(counter - 1, wordRule, dictionary, hash_table, table_size, acceptedWords, acceptedWordsSize);
+            }
+            free(wordRule);
         }
     }
-    return counter;
+    return;
 }
 
-int delete_characters(char * word, char ** result_arrayP[], int counter, int * array_size)
+void delete_characters(char * word, Word * acceptedWords[], int * acceptedWordsSize, int counter, char * dictionary[], Word ** hash_table, int table_size)
 {
-    char ** result_array = *result_arrayP;
     int len = strlen(word);
+    char * wordRule;
     for(int i = 0; i < len; i++){
-        *array_size = check_len(result_arrayP, counter, *array_size);
-        result_array = *result_arrayP;
-        result_array[counter] = malloc(sizeof(char) * (len));
+        wordRule = malloc(sizeof(char) * (len));
         
-        memcpy(result_array[counter], word, (len - (len - i)) + 1);
-        memcpy(result_array[counter] + i, word + (i + 1), (len - i) + 1);
+        memcpy(wordRule, word, (len - (len - i)) + 1);
+        memcpy(wordRule + i, word + (i + 1), (len - i) + 1);
 
-        // printf("%s\n", result_array[counter]);
-
-        counter++;
+        if(counter == 0){
+            if(find_word(wordRule, dictionary, hash_table, table_size)){
+                insert_word_result(wordRule, acceptedWords, acceptedWordsSize);
+                // printf("%s\n", wordRule);
+            }
+        }else{
+            apply_rules(counter - 1, wordRule, dictionary, hash_table, table_size, acceptedWords, acceptedWordsSize);
+        }
+        free(wordRule);
     }
-    return counter;
+    return;
 }
 
-int insert_spaces(char * word, char ** result_arrayP[], int counter, int * array_size, char * dictionary[], Word ** hash_table, int table_size)
+void insert_spaces(char * word, Word * acceptedWords[], int * acceptedWordsSize, int counter, char * dictionary[], Word ** hash_table, int table_size)
 {
-    char ** result_array = *result_arrayP;
     int len = strlen(word);
     for(int i = 0; i < len; i++){
         char * firstWord = malloc(sizeof(char) * ((len - (len - i)) + 1));
@@ -302,106 +347,58 @@ int insert_spaces(char * word, char ** result_arrayP[], int counter, int * array
         memcpy(secondWord, word + i, (len - i) + 1);
         secondWord[(len - i)] = '\0';
         
-        // printf("%s %s\n", firstWord, secondWord);
-
-        *array_size = check_len(result_arrayP, counter, *array_size);
-        result_array = *result_arrayP;
+        
         if(find_word(firstWord, dictionary, hash_table, table_size) && find_word(secondWord, dictionary, hash_table, table_size)){
-            *array_size = check_len(&result_array, counter + 1, *array_size);
-            result_array[counter] = firstWord;
-            result_array[counter + 1] = secondWord;
-            counter += 2;
+            insert_word_result(firstWord, acceptedWords, acceptedWordsSize);
+            insert_word_result(secondWord, acceptedWords, acceptedWordsSize);
+            // printf("%s\n", wordRule);
+            free(firstWord);
+            free(secondWord);
         }
 
         
     }
-    return counter;
+    return;
 }
 
-int apply_rules(int counter, char * word, char * dictionary[], Word ** hash_table, int table_size, char ** result_array[], int * result_array_size, char ** acceptedWords[], int * acceptedWordsSize, int * counterAcc)
+
+int apply_rules(int counter, char * word, char * dictionary[], Word ** hash_table, int table_size, Word * acceptedWords[], int * acceptedWordsSize)
 {
-    // printf("switch\n");
-    int counterAccT = 0;
-    char ** dOneT = *result_array;
-    char ** AccT = *acceptedWords;
-    int dOneTsize = *result_array_size, AcctSize = *acceptedWordsSize;
-    counter = switch_characters(word, &dOneT, counter, &dOneTsize);
-    // printf("insert\n");
-    counter = insert_characters(word, &dOneT, counter, &dOneTsize);
-    // printf("change\n");
-    counter = change_characters(word, &dOneT, counter, &dOneTsize);
-    // printf("delete\n");
-    counter = delete_characters(word, &dOneT, counter, &dOneTsize);
-    // printf("insert_spaces\n");
-    counterAccT = insert_spaces(word, &AccT, counterAccT, &AcctSize, dictionary, hash_table, table_size);
-
-    *result_array = dOneT;
-    *acceptedWords = AccT;
-    *counterAcc = counterAccT;
-    *result_array_size = dOneTsize;
-    *acceptedWordsSize = AcctSize;
+    if(*acceptedWordsSize >= 5) return 0;
+    switch_characters(word, acceptedWords, acceptedWordsSize, counter, dictionary, hash_table, table_size);
+    insert_characters(word, acceptedWords, acceptedWordsSize, counter, dictionary, hash_table, table_size);
+    change_characters(word, acceptedWords, acceptedWordsSize, counter, dictionary, hash_table, table_size);
+    delete_characters(word, acceptedWords, acceptedWordsSize, counter, dictionary, hash_table, table_size);
+    insert_spaces(word, acceptedWords, acceptedWordsSize, counter, dictionary, hash_table, table_size);
     return counter;
 }
+
 
 int pre_check(char * word, char * dictionary[], Word ** hash_table, int table_size)
 {
-    char ** dOne = malloc(sizeof(char *) * 100);
-    char ** dTwo = malloc(sizeof(char *) * 100);
-    char ** dThree = malloc(sizeof(char *) * 100);
-    char ** acceptedWords = malloc(sizeof(char *) * 100);
-    int acceptedWordsSize = 100, dOneSize = 100, dTwoSize = 100, dThreeSize = 100, counterAcc = 100;
+    int acceptedWordsCounter = 0;
+    Word ** acceptedWords = malloc(sizeof(char *) * 6);
+    clean_array(acceptedWords, 6);
+    int distance = 0;
 
-
-    int dOneCounter = apply_rules(0, word, dictionary, hash_table, table_size, &dOne, &dOneSize, &acceptedWords, &acceptedWordsSize, &counterAcc);
-    printf("Counter %d\n", dOneCounter);
-    // for(int i = 0; i < dOneCounter; i++){
-    //     if(find_word(dOne[i], dictionary, hash_table, table_size)){
-    //         printf("%s\n", dOne[i]);
-    //     }
-    // }
-    for(int i = 0; i < dOneCounter; i++){
-        if(find_word(dOne[i], dictionary, hash_table, table_size)){
-            // printf("%s\n", dOne[i]);
-        }
+    while(distance < 3 && acceptedWordsCounter < 5){
+        apply_rules(distance, word, dictionary, hash_table, table_size, acceptedWords, &acceptedWordsCounter);
+        distance++;
     }
-    int counter2 = 0;
-    for(int i = 0; i < dOneCounter; i++){
-        counter2 = apply_rules(counter2, dOne[i], dictionary, hash_table, table_size, &dTwo, &dTwoSize, &acceptedWords, &acceptedWordsSize, &counterAcc);
+    for(int i = 0; i < acceptedWordsCounter; i++){
+        printf("%s\n", acceptedWords[i]->word);
     }
-    printf("counter 2 %d\n", counter2);
-    // int counter3 = 0;
-    // for(int i = 0; i < counter2; i++){
-    //     counter3 = apply_rules(counter3, dTwo[i], dictionary, hash_table, table_size, &dThree, &dThreeSize, &acceptedWords, &acceptedWordsSize, &counterAcc);
-    // }
-    // printf("counter 3 %d\n", counter3);
-    // for(int i = 0; i < counter3; i++){
-    //     if(find_word(dThree[i], dictionary, hash_table, table_size)){
-    //         // printf("%s\n", dThree[i]);
-    //     }
-    // }
 
 }
+
 
 int main()
 {
     char * dictionary[MAX_LEN];
     int table_size = 0;
-    int counter = readfile("diccionario2.txt", dictionary);
+    int counter = readfile("diccionario.txt", dictionary);
     Word ** hash_table = hash_words(dictionary, counter, &table_size);
-    // for(int i = 0; i < table_size; i++){
-    //     if(hash_table[i] != NULL){
-    //         Word * aux = hash_table[i];
-    //         while(aux != NULL){
-    //             printf("%d ", aux->index);
-    //             aux = aux->next;
-    //         }
-    //         printf("\n");
-    //     }else{
-    //         printf("NULL\n");
-    //     }
-    // }
-    // find_word("hola\0", dictionary, hash_table, table_size);
     char ** result = malloc(sizeof(char *) * 100);
-    pre_check("aaaaaaaaaaaaasiudaaaaa\0", dictionary, hash_table, table_size);
+    pre_check("zzz\0", dictionary, hash_table, table_size);
     return 0;
 }
