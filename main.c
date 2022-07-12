@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <math.h>
+#include <ctype.h>
 #define MAX_LEN 1000000
 
 
@@ -12,6 +13,11 @@ typedef struct WordStruct{
   unsigned int hash;
   struct WordStruct* next;
 } Word;
+
+typedef struct SuggestionStruct{
+    int line;
+    char * word;
+} Suggestion;
 
 int apply_rules(int counter, char * word, char * dictionary[], Word ** hash_table, int table_size, Word * acceptedWords[], int * acceptedWordsSize);
 
@@ -160,7 +166,14 @@ void saveWord(char * word, char * dictionary[], int index)
     strcpy(dictionary[index], word);
 }
 
+void save_word_suggestion(char * word, Suggestion * dictionary[], int index, int line)
+{
 
+    dictionary[index] = malloc(sizeof(Suggestion));
+    dictionary[index]->word = malloc(sizeof(char) * (strlen(word) + 1));
+    strcpy(dictionary[index]->word, word);
+    dictionary[index]->line = line;
+}
 
 int readfile(const char *path, char * dictionary[])
 {
@@ -198,6 +211,41 @@ int readfile(const char *path, char * dictionary[])
     return counter;
 }
 
+int readfile_suggestion(const char *path, Suggestion * dictionary[])
+{
+    printf("HERE\n");
+	char aux[100];
+	
+    FILE *f = fopen(path, "rb");
+	
+    int c, i = 0, counter = 0;
+	
+    if (f == NULL)
+        quit("readfile.fopen");
+    
+    int flag = 1;
+	int line = 1;
+    while (flag) {
+        c = getc(f);
+        if(c == '\n' || c == EOF || c == ' '){
+            aux[i] = '\0';
+            save_word_suggestion(aux, dictionary, counter, line);
+            
+            counter++;
+        
+            i = 0;
+            if(c == '\n') line++;
+            if(c == EOF) flag = 0;
+        }else{
+            aux[i++] = c;
+        }
+	}
+	
+    fclose(f);
+    
+    return counter;
+}
+
 int find_word(char * word, char * dictionary[], Word ** hash_table, int table_size)
 {
     unsigned int first_hash = hash_first(word);
@@ -206,6 +254,7 @@ int find_word(char * word, char * dictionary[], Word ** hash_table, int table_si
     
     // second_hash = hash_second(word, table_size);
     Word * aux = hash_table[position];
+
     while(aux != NULL && flag != 0)
     {
         if(aux->hash == first_hash){
@@ -383,9 +432,6 @@ int pre_check(char * word, char * dictionary[], Word ** hash_table, int table_si
         apply_rules(distance, word, dictionary, hash_table, table_size, acceptedWords, acceptedWordsCounter);
         distance++;
     }
-    for(int i = 0; i < *acceptedWordsCounter; i++){
-        printf("%s\n", acceptedWords[i]->word);
-    }
 
 }
 
@@ -397,12 +443,20 @@ void free_list(Word * word){
     free_list(next);
 }
 
-void free_all(char * dictionary[], Word ** acceptedWords, Word ** hashTable, int tableSize, int dicSize)
+void free_all(char * dictionary[], Word ** hashTable, int tableSize, int dicSize)
 {   
     printf("%d %d\n", dicSize, tableSize);
     for(int i = 0; i < dicSize; i++){
         free(dictionary[i]); //free elements inside
     }
+    for(int i = 0; i < tableSize; i++){
+        free_list(hashTable[i]);
+    }
+    free(hashTable);
+}
+
+void free_accepted(Word ** acceptedWords)
+{   
     for(int i = 0; i < 6; i++){
         if(acceptedWords[i] != NULL){
             free(acceptedWords[i]->word);
@@ -410,21 +464,60 @@ void free_all(char * dictionary[], Word ** acceptedWords, Word ** hashTable, int
         }
     }
     free(acceptedWords);
-    for(int i = 0; i < tableSize; i++){
-        free_list(hashTable[i]);
-    }
-    free(hashTable);
 }
 
-int main()
+Word ** suggest_word(char * word, char * dictionary[], int dicSize, Word ** hashTable, int tableSize, int * acceptedWordsCounter)
 {
-    char * dictionary[MAX_LEN];
-    int tableSize = 0, acceptedWordsCounter = 0;
-    int dicSize = readfile("diccionario.txt", dictionary);
+    *acceptedWordsCounter = 0;
     Word ** acceptedWords = malloc(sizeof(char *) * 6);
     clean_array(acceptedWords, 6);
+    pre_check(word, dictionary, hashTable, tableSize, acceptedWords, acceptedWordsCounter);
+    // free_all(dictionary, acceptedWords, hashTable, tableSize, dicSize);
+    // free_accepted(acceptedWords);
+    return acceptedWords;
+}
+
+char * parse_word(char * word)
+{
+    char * parsedWord = malloc(sizeof(char) * strlen(word) + 1);
+    int counter = 0; 
+    for(int i = 0; i < strlen(word); i++){
+        if(isalpha(word[i])){
+            parsedWord[counter++] = tolower(word[i]);
+        }
+    }
+    parsedWord[counter] = '\0';
+    return parsedWord;
+}
+
+
+
+int main(int argc, char *argv[])
+{
+    char * dictionary[MAX_LEN];
+    Suggestion * suggestion[10000];
+    int tableSize = 0;
+    int dicSize = readfile(argv[1], dictionary);
     Word ** hashTable = hash_words(dictionary, dicSize, &tableSize);
-    pre_check("eugenio\0", dictionary, hashTable, tableSize, acceptedWords, &acceptedWordsCounter);
-    free_all(dictionary, acceptedWords, hashTable, tableSize, dicSize);
+    // parse_word("AbC./\0");
+    Word ** acceptedWords;
+    int acceptedWordsCounter = 0;
+    int suggestionCounter = readfile_suggestion(argv[2], suggestion);
+    printf("%s\n", argv[2]);
+    for(int i = 0; i < suggestionCounter; i++){
+        char * parsed = parse_word(suggestion[i]->word);
+        if(!find_word(parsed, dictionary, hashTable, tableSize)){
+            printf("Palabra %s en la linea %d es erronea, sugerencias:\n", parsed, suggestion[i]->line);
+            printf("---------------------\n");
+            acceptedWords = suggest_word(parsed, dictionary, dicSize, hashTable, tableSize, &acceptedWordsCounter);
+            for(int i = 0; i < acceptedWordsCounter; i++){
+                printf("%s\n", acceptedWords[i]->word);
+            }
+            printf("---------------------\n");
+            free_accepted(acceptedWords);
+        }
+        free(parsed);
+    }
+    free_all(dictionary, hashTable, tableSize, dicSize);
     return 0;
 }
