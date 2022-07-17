@@ -395,8 +395,8 @@ void insert_spaces(char * word, Word * acceptedWords[], int * acceptedWordsSize,
 {
     int len = strlen(word);
     for(int i = 0; i < len; i++){
-        char * firstWord = malloc(sizeof(char) * ((len - (len - i)) + 1));
-        char * secondWord = malloc(sizeof(char) * ((len - i) + 1));
+        char * firstWord = malloc(sizeof(char) * ((len - (len - i)) + 2));
+        char * secondWord = malloc(sizeof(char) * ((len - i) + 2));
 
         memcpy(firstWord, word, (len - (len - i)) + 1);
         firstWord[(len - (len - i))] = '\0';
@@ -405,8 +405,13 @@ void insert_spaces(char * word, Word * acceptedWords[], int * acceptedWordsSize,
         
         
         if(find_word(firstWord, dictionary, hash_table, table_size, 0) && find_word(secondWord, dictionary, hash_table, table_size, 0)){
-            insert_word_result(firstWord, acceptedWords, acceptedWordsSize);
-            insert_word_result(secondWord, acceptedWords, acceptedWordsSize);
+            firstWord[(len - (len - i))] = ' ';
+            firstWord[(len - (len - i)) + 1] = '\0';
+            char * newWord = malloc(sizeof(char) * (len + 2));
+            memcpy(newWord, firstWord, strlen(firstWord) + 1);
+            memcpy(newWord + strlen(newWord), secondWord, strlen(secondWord) + 1);
+            insert_word_result(newWord, acceptedWords, acceptedWordsSize);
+            free(newWord);
         }
         free(firstWord);
         free(secondWord);
@@ -429,11 +434,11 @@ int apply_rules(int counter, char * word, char * dictionary[], Word ** hash_tabl
         memcpy(newWord, word, strlen(word) + 1);
         repeatedHash[position] = insert_word(counter,repeatedHash[position], hash, newWord);
     }
-    switch_characters(word, acceptedWords, acceptedWordsSize, counter, dictionary, hash_table, table_size, repeatedHash);
-    insert_characters(word, acceptedWords, acceptedWordsSize, counter, dictionary, hash_table, table_size, repeatedHash);
-    change_characters(word, acceptedWords, acceptedWordsSize, counter, dictionary, hash_table, table_size, repeatedHash);
-    delete_characters(word, acceptedWords, acceptedWordsSize, counter, dictionary, hash_table, table_size, repeatedHash);
     insert_spaces(word, acceptedWords, acceptedWordsSize, counter, dictionary, hash_table, table_size);
+    delete_characters(word, acceptedWords, acceptedWordsSize, counter, dictionary, hash_table, table_size, repeatedHash);
+    switch_characters(word, acceptedWords, acceptedWordsSize, counter, dictionary, hash_table, table_size, repeatedHash);
+    change_characters(word, acceptedWords, acceptedWordsSize, counter, dictionary, hash_table, table_size, repeatedHash);
+    insert_characters(word, acceptedWords, acceptedWordsSize, counter, dictionary, hash_table, table_size, repeatedHash);
     return counter;
 }
 
@@ -496,8 +501,6 @@ Word ** suggest_word(char * word, char * dictionary[], int dicSize, Word ** hash
     Word ** acceptedWords = malloc(sizeof(char *) * 6);
     clean_array(acceptedWords, 6);
     pre_check(word, dictionary, hashTable, tableSize, acceptedWords, acceptedWordsCounter);
-    // free_all(dictionary, acceptedWords, hashTable, tableSize, dicSize);
-    // free_accepted(acceptedWords);
     return acceptedWords;
 }
 
