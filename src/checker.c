@@ -48,7 +48,7 @@ void pre_check(char * word, char * dictionary[], Word ** hash_table, int table_s
 Word ** suggest_word(char * word, char * dictionary[], int dicSize, Word ** hashTable, int tableSize, int * acceptedWordsCounter)
 {
     *acceptedWordsCounter = 0;
-    Word ** acceptedWords = malloc(sizeof(char *) * 6);
+    Word ** acceptedWords = malloc(sizeof(Word *) * 6);
     clean_array(acceptedWords, 6);
     pre_check(word, dictionary, hashTable, tableSize, acceptedWords, acceptedWordsCounter);
     return acceptedWords;
