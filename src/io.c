@@ -5,14 +5,12 @@
 #include "../headers/helpers.h"
 #include "../headers/checker.h"
 
-void quit(const char *s)
-{
+void quit(const char *s){
 	perror(s);
 	exit(1);
 }
 
-int readfile(const char *path, char * dictionary[])
-{
+int readfile(const char *path, char * dictionary[]){
 	char aux[100];
 	
     FILE *f = fopen(path, "rb");
@@ -47,8 +45,7 @@ int readfile(const char *path, char * dictionary[])
     return counter;
 }
 
-int read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * path, int tableSize)
-{
+int read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * path, int tableSize){
     char aux[100];
 	char * parsedWord;
 

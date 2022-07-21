@@ -6,8 +6,7 @@
 #include <ctype.h>
 #include "../headers/io.h"
 
-char * parse_word(char * word)
-{
+char * parse_word(char * word){
     char * parsedWord = malloc(sizeof(char) * strlen(word) + 2);
     int counter = 0; 
     for(int i = 0; i < strlen(word); i++){
@@ -19,8 +18,7 @@ char * parse_word(char * word)
     return parsedWord;
 }
 
-void free_accepted(Word ** acceptedWords)
-{   
+void free_accepted(Word ** acceptedWords){   
     for(int i = 0; i < 6; i++){
         if(acceptedWords[i] != NULL){
             free(acceptedWords[i]->word);
@@ -30,8 +28,7 @@ void free_accepted(Word ** acceptedWords)
     free(acceptedWords);
 }
 
-void free_all(char * dictionary[], Word ** hashTable, int tableSize, int dicSize)
-{   
+void free_all(char * dictionary[], Word ** hashTable, int tableSize, int dicSize){   
     printf("%d %d\n", dicSize, tableSize);
     for(int i = 0; i < dicSize; i++){
         free(dictionary[i]);
@@ -51,8 +48,7 @@ void free_list(Word * word){
     free_list(next);
 }
 
-int check_len(char ** array[], int counter, int arraySize)
-{
+int check_len(char ** array[], int counter, int arraySize){
     int newSize = arraySize;
     if(arraySize <= counter){
         newSize = (newSize * 3);
@@ -62,14 +58,12 @@ int check_len(char ** array[], int counter, int arraySize)
     return newSize;
 }
 
-void saveWord(char * word, char * dictionary[], int index)
-{
+void saveWord(char * word, char * dictionary[], int index){
     dictionary[index] = malloc(sizeof(char) * (strlen(word) + 1));
     strcpy(dictionary[index], word);
 }
 
-Word * insert_word(int index, Word * word, unsigned int hash, char * wordChar)
-{
+Word * insert_word(int index, Word * word, unsigned int hash, char * wordChar){
     Word * newWord = malloc(sizeof(Word));
     newWord->index = index;
     newWord->next = NULL;
@@ -87,8 +81,7 @@ Word * insert_word(int index, Word * word, unsigned int hash, char * wordChar)
     return word;
 }
 
-void clean_array(Word ** hashTable, int counter)
-{
+void clean_array(Word ** hashTable, int counter){
     for(int i = 0; i < counter; i++)
     {
         hashTable[i] = NULL;
