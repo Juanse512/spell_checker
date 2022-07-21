@@ -47,7 +47,7 @@ int readfile(const char *path, char * dictionary[])
     return counter;
 }
 
-void read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * path, int tableSize)
+int read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * path, int tableSize)
 {
     char aux[100];
 	char * parsedWord;
@@ -78,4 +78,5 @@ void read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char *
         }
 	}
     fclose(f);
+    return counter;
 }

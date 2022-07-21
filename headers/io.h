@@ -6,7 +6,7 @@ void quit(const char *s);
 
 int readfile(const char *path, char * dictionary[]);
 
-void read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * path, int tableSize);
+int read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * path, int tableSize);
 
 
 #endif
