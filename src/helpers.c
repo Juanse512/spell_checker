@@ -51,10 +51,10 @@ void free_list(Word * word){
     free_list(next);
 }
 
-int check_len(char ** array[], int counter, int array_size)
+int check_len(char ** array[], int counter, int arraySize)
 {
-    int newSize = array_size;
-    if(array_size <= counter){
+    int newSize = arraySize;
+    if(arraySize <= counter){
         newSize = (newSize * 3);
         // printf("IN HERE %d %d\n", counter, newSize);
         *array = realloc(*array, sizeof(char *) * (newSize));
@@ -87,10 +87,10 @@ Word * insert_word(int index, Word * word, unsigned int hash, char * wordChar)
     return word;
 }
 
-void clean_array(Word ** hash_table, int counter)
+void clean_array(Word ** hashTable, int counter)
 {
     for(int i = 0; i < counter; i++)
     {
-        hash_table[i] = NULL;
+        hashTable[i] = NULL;
     }
 }

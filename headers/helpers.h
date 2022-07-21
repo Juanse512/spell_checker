@@ -10,13 +10,13 @@ typedef struct WordStruct{
   struct WordStruct* next;
 } Word;
 
-void clean_array(Word ** hash_table, int counter);
+void clean_array(Word ** hashTable, int counter);
 
 Word * insert_word(int index, Word * word, unsigned int hash, char * wordChar);
 
 void saveWord(char * word, char * dictionary[], int index);
 
-int check_len(char ** array[], int counter, int array_size);
+int check_len(char ** array[], int counter, int arraySize);
 
 void free_list(Word * word);
 

@@ -7,8 +7,7 @@
 #include "../headers/io.h"
 #include "../headers/checker.h"
 
-unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed )
-{
+unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ){
 	// 'm' and 'r' are mixing constants generated offline.
 	// They're not really 'magic', they just happen to work well.
 
@@ -59,8 +58,7 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed )
 } 
 
 //hashing
-unsigned int hash_first(char * word)
-{
+unsigned int hash_first(char * word){
     
     int len = strlen(word);
     unsigned int hash = MurmurHash2(word, len, 13);
@@ -69,8 +67,7 @@ unsigned int hash_first(char * word)
 
 
 //hashing
-Word ** hash_words(char * dictionary[], int counter, int * size)
-{
+Word ** hash_words(char * dictionary[], int counter, int * size){
     int table_size = ceil(counter / 0.7);
     Word ** hash_table = malloc(sizeof(Word *) * (table_size + 1));
     
@@ -92,14 +89,13 @@ Word ** hash_words(char * dictionary[], int counter, int * size)
 
 
 //hashing
-int find_word(char * word, char * dictionary[], Word ** hash_table, int table_size, int index)
-{
+int find_word(char * word, char * dictionary[], Word ** hashTable, int tableSize, int index){
     unsigned int first_hash = hash_first(word);
-    unsigned int position = first_hash % table_size;
+    unsigned int position = first_hash % tableSize;
     int flag = 1;
     
-    // second_hash = hash_second(word, table_size);
-    Word * aux = hash_table[position];
+    // second_hash = hash_second(word, tableSize);
+    Word * aux = hashTable[position];
 
     while(aux != NULL && flag != 0)
     {

@@ -29,14 +29,13 @@ void insert_word_result(char * word, Word ** acceptedWords, int * acceptedWordsS
     return;
 }
 
-void pre_check(char * word, char * dictionary[], Word ** hash_table, int table_size, Word ** acceptedWords, int * acceptedWordsCounter)
-{
+void pre_check(char * word, char * dictionary[], Word ** hashTable, int tableSize, Word ** acceptedWords, int * acceptedWordsCounter){
     
     int distance = 0;
     Word * repeatedHash[MAX_LEN_2];
     clean_array(repeatedHash, MAX_LEN_2);
     while(distance < 3 && *acceptedWordsCounter < 5){
-        apply_rules(distance, word, dictionary, hash_table, table_size, acceptedWords, acceptedWordsCounter, repeatedHash);
+        apply_rules(distance, word, dictionary, hashTable, tableSize, acceptedWords, acceptedWordsCounter, repeatedHash);
         distance++;
     }
     for(int i = 0; i < MAX_LEN_2; i++){
@@ -45,8 +44,7 @@ void pre_check(char * word, char * dictionary[], Word ** hash_table, int table_s
     return;
 }
 
-Word ** suggest_word(char * word, char * dictionary[], int dicSize, Word ** hashTable, int tableSize, int * acceptedWordsCounter)
-{
+Word ** suggest_word(char * word, char * dictionary[], int dicSize, Word ** hashTable, int tableSize, int * acceptedWordsCounter){
     *acceptedWordsCounter = 0;
     Word ** acceptedWords = malloc(sizeof(Word *) * 6);
     clean_array(acceptedWords, 6);
@@ -54,8 +52,7 @@ Word ** suggest_word(char * word, char * dictionary[], int dicSize, Word ** hash
     return acceptedWords;
 }
 
-void check_word(char * word, char * dictionary[], Word** hashTable, int tableSize, int dicSize, int line)
-{
+void check_word(char * word, char * dictionary[], Word** hashTable, int tableSize, int dicSize, int line){
     Word ** acceptedWords;
     int acceptedWordsCounter = 0;
     if(!find_word(word, dictionary, hashTable, tableSize, 0)){

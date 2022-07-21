@@ -8,7 +8,7 @@ unsigned int hash_first(char * word);
 
 Word ** hash_words(char * dictionary[], int counter, int * size);
 
-int find_word(char * word, char * dictionary[], Word ** hash_table, int table_size, int index);
+int find_word(char * word, char * dictionary[], Word ** hashTable, int tableSize, int index);
 
 
 #endif
