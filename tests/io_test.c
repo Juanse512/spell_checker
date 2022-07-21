@@ -27,4 +27,5 @@ void test_read_suggestion(){
 int main(){
     test_readfile();
     test_read_suggestion();
+    printf("IO test passed\n");
 }

@@ -29,7 +29,6 @@ void free_accepted(Word ** acceptedWords){
 }
 
 void free_all(char * dictionary[], Word ** hashTable, int tableSize, int dicSize){   
-    printf("%d %d\n", dicSize, tableSize);
     for(int i = 0; i < dicSize; i++){
         free(dictionary[i]);
     }

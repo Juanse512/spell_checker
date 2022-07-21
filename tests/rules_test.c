@@ -115,4 +115,5 @@ int main(){
     test_change_characters();
     test_insert_characters();
     test_apply_rules();
+    printf("Rules test passed\n");
 }

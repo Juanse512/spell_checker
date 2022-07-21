@@ -31,4 +31,5 @@ int main(){
     test_murmur_hash();
     test_hash_first();
     test_hash_words_find_words();
+    printf("Hashing test passed\n");
 }

@@ -56,4 +56,5 @@ int main(){
     test_save_word();
     test_check_len();
     test_parse_word();
+    printf("Helpers test passed\n");
 }

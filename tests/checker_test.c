@@ -59,4 +59,5 @@ int main(){
     test_insert_word_result();
     test_pre_check();
     test_suggest_word();
+    printf("Checker test passed\n");
 }
