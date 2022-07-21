@@ -13,7 +13,7 @@ void test_insert_word_result(){
     hash[0] = malloc(sizeof(Word));
     hash[0]->word = malloc(sizeof(char) * 5);
     strcpy(hash[0]->word, "hola\0");
-    hash[0]->hash = MurmurHash2(hash[0]->word, strlen(hash[0]->word), 13);
+    hash[0]->hash = MurmurHash2(hash[0]->word, strlen(hash[0]->word), SEED_HASH);
     insert_word_result("hola\0", hash, &counter);
     insert_word_result("como\0", hash, &counter);
     assert(strcmp(hash[0]->word, "hola\0") == 0);

@@ -57,18 +57,17 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ){
 	return h;
 } 
 
-//hashing
 unsigned int hash_first(char * word){
     
     int len = strlen(word);
-    unsigned int hash = MurmurHash2(word, len, 13);
+    unsigned int hash = MurmurHash2(word, len, SEED_HASH);
     return hash;
 }
 
 
-//hashing
+
 Word ** hash_words(char * dictionary[], int counter, int * size){
-    int table_size = ceil(counter / 0.7);
+    int table_size = ceil(counter / 0.7); // factor de carga 0.7
     Word ** hash_table = malloc(sizeof(Word *) * (table_size + 1));
     
     clean_array(hash_table, table_size);
@@ -88,31 +87,29 @@ Word ** hash_words(char * dictionary[], int counter, int * size){
 }
 
 
-//hashing
 int find_word(char * word, char * dictionary[], Word ** hashTable, int tableSize, int index){
     unsigned int first_hash = hash_first(word);
     unsigned int position = first_hash % tableSize;
     int flag = 1;
     
-    // second_hash = hash_second(word, tableSize);
     Word * aux = hashTable[position];
 
     while(aux != NULL && flag != 0)
     {
         if(aux->hash == first_hash){
-            if(aux->word != NULL){
+            // Si tengo una palabra en word significa que el index indica la distancia
+            if(aux->word != NULL){ 
                 if(strcmp(word, aux->word) == 0 && aux->index == index){
                     flag = 0;
                 }
             }else{
+                // Si no indica el indice de la palabra en el diccionario
                 if(strcmp(word, dictionary[aux->index]) == 0){
                     flag = 0;
                 }
             }
-            // flag = 0;
         }
         aux = aux->next;
     }
-    // printf("%d\n", flag);
     return flag == 0 ? 1 : 0;
 }

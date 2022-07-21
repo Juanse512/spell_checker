@@ -57,7 +57,7 @@ int check_len(char ** array[], int counter, int arraySize){
     return newSize;
 }
 
-void saveWord(char * word, char * dictionary[], int index){
+void save_word(char * word, char * dictionary[], int index){
     dictionary[index] = malloc(sizeof(char) * (strlen(word) + 1));
     strcpy(dictionary[index], word);
 }

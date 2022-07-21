@@ -14,6 +14,7 @@ void insert_word_result(char * word, Word ** acceptedWords, int * acceptedWordsS
     unsigned int wordHash = hash_first(word);
     for(int i = 0; i < *acceptedWordsSize; i++){
         if(acceptedWords[i] != NULL){
+            //Si la palabra ya se encuentra en el array no la guardo
             if(acceptedWords[i]->hash == wordHash){
                 flag = 1;
             }

@@ -37,7 +37,6 @@ void switch_characters(char * word, Word * acceptedWords[], int * acceptedWordsS
     return;
 }
 
-//rules
 void insert_characters(char * word, Word * acceptedWords[], int * acceptedWordsSize, int counter, char * dictionary[], Word ** hashTable, int tableSize, Word ** repeatedHash){
     int len = strlen(word);
     char * wordRule;
@@ -63,7 +62,6 @@ void insert_characters(char * word, Word * acceptedWords[], int * acceptedWordsS
     return;
 }
 
-//rules
 void change_characters(char * word, Word * acceptedWords[], int * acceptedWordsSize, int counter, char * dictionary[], Word ** hashTable, int tableSize, Word ** repeatedHash){
     int len = strlen(word);
     char * wordRule;
@@ -88,7 +86,6 @@ void change_characters(char * word, Word * acceptedWords[], int * acceptedWordsS
 }
 
 
-//rules
 void delete_characters(char * word, Word * acceptedWords[], int * acceptedWordsSize, int counter, char * dictionary[], Word ** hashTable, int tableSize, Word ** repeatedHash){
     int len = strlen(word);
     char * wordRule;
@@ -110,7 +107,6 @@ void delete_characters(char * word, Word * acceptedWords[], int * acceptedWordsS
     return;
 }
 
-//rules
 void insert_spaces(char * word, Word * acceptedWords[], int * acceptedWordsSize, int counter, char * dictionary[], Word ** hashTable, int tableSize){
     int len = strlen(word);
     for(int i = 0; i < len; i++){
@@ -140,7 +136,6 @@ void insert_spaces(char * word, Word * acceptedWords[], int * acceptedWordsSize,
     return;
 }
 
-//rules
 int apply_rules(int counter, char * word, char * dictionary[], Word ** hashTable, int tableSize, Word * acceptedWords[], int * acceptedWordsSize, Word ** repeatedHash){
     if(*acceptedWordsSize >= 5) return 0;
     unsigned int hash = hash_first(word);

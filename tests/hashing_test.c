@@ -8,7 +8,7 @@
 #include <assert.h>
 
 void test_murmur_hash(){
-    unsigned int hash = MurmurHash2("hola\0", strlen("hola\0"), 13);
+    unsigned int hash = MurmurHash2("hola\0", strlen("hola\0"), SEED_HASH);
     assert(hash == 3577387992);
 }
 

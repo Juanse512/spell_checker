@@ -32,7 +32,7 @@ void test_insert_word(){
 
 void test_save_word(){
     char * dic[10];
-    saveWord("hola\0", dic, 0);
+    save_word("hola\0", dic, 0);
     assert(strcmp(dic[0], "hola\0") == 0);
     free(dic[0]);
 }
