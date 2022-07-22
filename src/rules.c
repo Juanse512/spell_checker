@@ -67,7 +67,6 @@ void change_characters(char * word, Word * acceptedWords[], int * acceptedWordsS
     char * wordRule;
     for(int i = 0; i < len; i++){
         for(char j = 97; j < 123; j++){
-            // printf("%d\n", counter);
             wordRule = malloc(sizeof(char) * (len + 2));
             memcpy(wordRule, word, len + 1);
             wordRule[i] = j;
@@ -140,6 +139,7 @@ int apply_rules(int counter, char * word, char * dictionary[], Word ** hashTable
     if(*acceptedWordsSize >= 5) return 0;
     unsigned int hash = hash_first(word);
     unsigned int position = hash % MAX_LEN_2;
+    //Si la palabra ya se encuentra retorno, si no la guardo y luego calculo
     if(find_word(word, dictionary, repeatedHash, MAX_LEN_2, counter)){
         return 0;
     }else{
