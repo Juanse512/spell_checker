@@ -65,25 +65,24 @@ unsigned int hash_first(char * word){
 }
 
 
-
 Word ** hash_words(char * dictionary[], int counter, int * size){
-    int table_size = ceil(counter / 0.7); // factor de carga 0.7
-    Word ** hash_table = malloc(sizeof(Word *) * (table_size + 1));
+    int tableSize = ceil(counter / 0.7); // factor de carga 0.7
+    Word ** hashTable = malloc(sizeof(Word *) * (tableSize + 1));
     
-    clean_array(hash_table, table_size);
+    clean_array(hashTable, tableSize);
     
-    unsigned int first_hash = 0, position = 0;
+    unsigned int firstHash = 0, position = 0;
     
     for(int i = 0; i < counter; i++)
     {
-        first_hash = hash_first(dictionary[i]);
+        firstHash = hash_first(dictionary[i]);
         
-        position = first_hash % table_size;
+        position = firstHash % tableSize;
         
-        hash_table[position] = insert_word(i, hash_table[position], first_hash, NULL);
+        hashTable[position] = insert_word(i, hashTable[position], firstHash, NULL);
     }
-    *size = table_size;
-    return hash_table;
+    *size = tableSize;
+    return hashTable;
 }
 
 
@@ -105,6 +104,7 @@ int find_word(char * word, char * dictionary[], Word ** hashTable, int tableSize
             }else{
                 // Si no indica el indice de la palabra en el diccionario
                 if(strcmp(word, dictionary[aux->index]) == 0){
+
                     flag = 0;
                 }
             }

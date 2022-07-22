@@ -26,8 +26,8 @@ int readfile(const char *path, char * dictionary[]){
         c = getc(f);
         
         if(c == '\n' || c == EOF){
-            aux[i - 1] = '\0';
-        
+            aux[i] = '\0';
+            // printf("%s\n", aux);
             save_word(aux, dictionary, counter);
         
             counter++;
@@ -36,7 +36,9 @@ int readfile(const char *path, char * dictionary[]){
         
             if(c == EOF) flag = 0;
         }else{
-            aux[i++] = c;
+            if(c != 13){
+                aux[i++] = c;
+            }
         }
 	}
 	

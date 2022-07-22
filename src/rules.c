@@ -25,7 +25,7 @@ void switch_characters(char * word, Word * acceptedWords[], int * acceptedWordsS
         wordRule[i + 1] = aux;
 
         if(counter == 0){
-            if(find_word(wordRule, dictionary, hashTable, tableSize, 0)){
+            if(find_word(wordRule, dictionary, hashTable, tableSize, -1)){
                 insert_word_result(wordRule, acceptedWords, acceptedWordsSize);
             }
         }else{
@@ -49,7 +49,7 @@ void insert_characters(char * word, Word * acceptedWords[], int * acceptedWordsS
             
             wordRule[i] = j;
             if(counter == 0){
-                if(find_word(wordRule, dictionary, hashTable, tableSize, 0)){
+                if(find_word(wordRule, dictionary, hashTable, tableSize, -1)){
                     insert_word_result(wordRule, acceptedWords, acceptedWordsSize);
                 }
             }else{
@@ -71,7 +71,7 @@ void change_characters(char * word, Word * acceptedWords[], int * acceptedWordsS
             memcpy(wordRule, word, len + 1);
             wordRule[i] = j;
             if(counter == 0){
-                if(find_word(wordRule, dictionary, hashTable, tableSize, 0)){
+                if(find_word(wordRule, dictionary, hashTable, tableSize, -1)){
                     insert_word_result(wordRule, acceptedWords, acceptedWordsSize);
                 }
             }else{
@@ -95,7 +95,7 @@ void delete_characters(char * word, Word * acceptedWords[], int * acceptedWordsS
         memcpy(wordRule + i, word + (i + 1), (len - i) + 1);
 
         if(counter == 0){
-            if(find_word(wordRule, dictionary, hashTable, tableSize, 0)){
+            if(find_word(wordRule, dictionary, hashTable, tableSize, -1)){
                 insert_word_result(wordRule, acceptedWords, acceptedWordsSize);
             }
         }else{
@@ -118,7 +118,7 @@ void insert_spaces(char * word, Word * acceptedWords[], int * acceptedWordsSize,
         secondWord[(len - i)] = '\0';
         
         
-        if(find_word(firstWord, dictionary, hashTable, tableSize, 0) && find_word(secondWord, dictionary, hashTable, tableSize, 0)){
+        if(find_word(firstWord, dictionary, hashTable, tableSize, -1) && find_word(secondWord, dictionary, hashTable, tableSize, -1)){
             firstWord[(len - (len - i))] = ' ';
             firstWord[(len - (len - i)) + 1] = '\0';
             char * newWord = malloc(sizeof(char) * (len + 2));
