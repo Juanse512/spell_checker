@@ -13,17 +13,18 @@
 
 int main(int argc, char *argv[])
 {
-    char * dictionary[MAX_LEN];
+    // char * dictionary[MAX_LEN];
+    char ** dictionary = malloc(sizeof(char*) * INITIAL_LEN);
 
     int tableSize = 0;
     
-    int dicSize = readfile(argv[1], dictionary);
+    int dicSize = readfile(argv[1], &dictionary);
     
     Word ** hashTable = hash_words(dictionary, dicSize, &tableSize);
     
     read_suggestion(hashTable, dictionary, dicSize, argv[2], tableSize);
 
     free_all(dictionary, hashTable, tableSize, dicSize);
-    
+
     return 0;
 }
