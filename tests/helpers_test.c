@@ -9,8 +9,8 @@
 
 void test_clean_array(){
     Word ** accepted = malloc(sizeof(Word *) * 6);
-    clean_array(accepted, 7);
-    for(int i = 0; i < 7; i++){
+    clean_array(accepted, 6);
+    for(int i = 0; i < 6; i++){
         assert(accepted[i] == NULL);
     }
     free(accepted);
@@ -19,6 +19,7 @@ void test_clean_array(){
 void test_insert_word(){
     Word * first = malloc(sizeof(Word));
     first->word = malloc(sizeof(char) * 6);
+    first->next = NULL;
     strcpy(first->word, "como\0");
     first = insert_word(1, first, hash_first("hola\0"), "hola\0");
     assert(strcmp(first->next->word, "hola\0") == 0);
@@ -38,10 +39,14 @@ void test_save_word(){
 }
 
 void test_check_len(){
-    char ** dic = malloc(sizeof(char *) * 2);
-    int res = check_len(&dic, 3, 2);
-    assert(res == 6);
-    free(dic);
+    int len = 3, size = 2;
+    char *** dic1 = malloc(sizeof(char **));
+    char ** dic = malloc(sizeof(char *) * size);
+    *dic1 = dic;
+    dic1 = check_len(dic1, len, &size);
+    assert(size == 6);
+    free(*dic1);
+    free(dic1);
 }
 
 void test_parse_word(){

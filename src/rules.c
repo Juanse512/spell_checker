@@ -138,9 +138,9 @@ void insert_spaces(char * word, Word * acceptedWords[], int * acceptedWordsSize,
 int apply_rules(int counter, char * word, char * dictionary[], Word ** hashTable, int tableSize, Word * acceptedWords[], int * acceptedWordsSize, Word ** repeatedHash){
     if(*acceptedWordsSize >= 5) return 0;
     unsigned int hash = hash_first(word);
-    unsigned int position = hash % MAX_LEN_2;
+    unsigned int position = hash % MAX_LEN;
     //Si la palabra ya se encuentra retorno, si no la guardo y luego calculo
-    if(find_word(word, dictionary, repeatedHash, MAX_LEN_2, counter)){
+    if(find_word(word, dictionary, repeatedHash, MAX_LEN, counter)){
         return 0;
     }else{
         char * newWord = malloc(sizeof(char) * (strlen(word) + 1));

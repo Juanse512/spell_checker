@@ -10,12 +10,12 @@ void quit(const char *s){
 	exit(1);
 }
 
-int readfile(const char *path, char * dictionary[]){
+int readfile(const char *path, char *** dictionaryP){
 	char aux[100];
-	
+	char ** dictionary = *dictionaryP;
     FILE *f = fopen(path, "rb");
 	
-    int c, i = 0, counter = 0;
+    int c, i = 0, counter = 0, size = INITIAL_LEN;
 	
     if (f == NULL)
         quit("readfile.fopen");
@@ -27,6 +27,8 @@ int readfile(const char *path, char * dictionary[]){
         
         if(c == '\n' || c == EOF){
             aux[i] = '\0';
+            dictionaryP = check_len(dictionaryP, counter, &size);
+            dictionary = *dictionaryP;
             // printf("%s\n", aux);
             save_word(aux, dictionary, counter);
         

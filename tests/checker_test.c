@@ -27,8 +27,8 @@ void test_insert_word_result(){
 void test_pre_check(){
     int counter = 0, tableSize = 0;
     Word ** accepted = malloc(sizeof(Word *) * 6);
-    char * dictionary[MAX_LEN];
-    int dicSize = readfile("./tests/diccionario.txt", dictionary);
+    char ** dictionary = malloc(sizeof(char*) * INITIAL_LEN);
+    int dicSize = readfile("./tests/diccionario.txt", &dictionary);
     Word ** hashTable = hash_words(dictionary, dicSize, &tableSize);
     pre_check("holx\0", dictionary, hashTable, tableSize, accepted, &counter);
     assert(strcmp(accepted[0]->word, "hola\0") == 0);
@@ -42,8 +42,8 @@ void test_pre_check(){
 
 void test_suggest_word(){
     int counter = 0, tableSize = 0;
-    char * dictionary[MAX_LEN];
-    int dicSize = readfile("diccionario.txt", dictionary);
+    char ** dictionary = malloc(sizeof(char*) * INITIAL_LEN);
+    int dicSize = readfile("diccionario.txt", &dictionary);
     Word ** hashTable = hash_words(dictionary, dicSize, &tableSize);
     Word ** accepted = suggest_word("holx\0",dictionary, dicSize, hashTable, tableSize, &counter);
     assert(strcmp(accepted[0]->word, "hola\0") == 0);

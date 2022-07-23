@@ -32,6 +32,8 @@ void free_all(char * dictionary[], Word ** hashTable, int tableSize, int dicSize
     for(int i = 0; i < dicSize; i++){
         free(dictionary[i]);
     }
+    free(dictionary);
+
     for(int i = 0; i < tableSize; i++){
         free_list(hashTable[i]);
     }
@@ -47,14 +49,18 @@ void free_list(Word * word){
     free_list(next);
 }
 
-int check_len(char ** array[], int counter, int arraySize){
-    int newSize = arraySize;
-    if(arraySize <= counter){
+char *** check_len(char ** array[], int counter, int * arraySize){
+    int newSize = *arraySize;
+    char ** arrayN = *array;
+    if(*arraySize <= counter){
         newSize = (newSize * 3);
         // printf("IN HERE %d %d\n", counter, newSize);
-        *array = realloc(*array, sizeof(char *) * (newSize));
+        arrayN = realloc(arrayN, sizeof(char *) * (newSize));
     }
-    return newSize;
+    *array = arrayN;
+    // printf("OUT %d %d\n", counter, newSize);
+    *arraySize = newSize;
+    return array;
 }
 
 void save_word(char * word, char * dictionary[], int index){

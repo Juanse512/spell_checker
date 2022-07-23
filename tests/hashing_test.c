@@ -19,12 +19,11 @@ void test_hash_first(){
 
 void test_hash_words_find_words(){
     int counter = 0;
-    char * dictionary[MAX_LEN];
-    int dicSize = readfile("diccionario.txt", dictionary);
+    char ** dictionary = malloc(sizeof(char*) * INITIAL_LEN);
+    int dicSize = readfile("diccionario.txt", &dictionary);
     Word ** hash_table = hash_words(dictionary, dicSize, &counter);
     assert(find_word("hola\0", dictionary, hash_table, counter, 0));
     free_all(dictionary, hash_table, counter, dicSize);
-    // assert(hash == 3577387992);
 }
 
 int main(){

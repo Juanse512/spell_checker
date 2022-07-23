@@ -1,7 +1,7 @@
 #ifndef __SPELL_HELPERS_H_
 #define __SPELL_HELPERS_H_
-#define MAX_LEN 1000000
-#define MAX_LEN_2 10000
+#define INITIAL_LEN 100
+#define MAX_LEN 10000
 #define SEED_HASH 13
 //Word:
 // index: indica la posicion de la palabra en el diccionario en la tabla hash original y la distancia en la tabla hash de palabras ya calculadas
@@ -27,9 +27,9 @@ Word * insert_word(int index, Word * word, unsigned int hash, char * wordChar);
 // Guarda una palabra en el array que le pasamos, en la posicion dada
 void save_word(char * word, char * dictionary[], int index);
 
-// save_word: (char ***, int, int) -> (int)
-// Dado el puntero de un array de punteros y un contador, si el contador es mayor al tamaño del array, se triplica el tamaño de este y devuelve el tamaño
-int check_len(char ** array[], int counter, int arraySize);
+// save_word: (char ***, int, int) -> (char***)
+// Dado el puntero de un array de punteros y un contador, si el contador es mayor al tamaño del array, se triplica el tamaño de este y devuelve el puntero modificado
+char *** check_len(char ** array[], int counter, int * arraySize);
 
 // free_list: (Word *) -> ()
 // Libera la lista enlazada de un Word

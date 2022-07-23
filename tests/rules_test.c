@@ -9,13 +9,13 @@
 #include <assert.h>
 
 void test_switch_characters(){
-    Word * repeatedHash[MAX_LEN_2];
-    clean_array(repeatedHash, MAX_LEN_2);
+    Word * repeatedHash[MAX_LEN];
+    clean_array(repeatedHash, MAX_LEN);
     Word ** accepted = malloc(sizeof(Word *) * 6);
     clean_array(accepted, 6);
     int tableSize = 0, counter = 0;
-    char * dictionary[MAX_LEN];
-    int dicSize = readfile("./tests/diccionario.txt", dictionary);
+    char ** dictionary = malloc(sizeof(char*) * INITIAL_LEN);
+    int dicSize = readfile("./tests/diccionario.txt", &dictionary);
     Word ** hashTable = hash_words(dictionary, dicSize, &tableSize);
     switch_characters("hloa\0", accepted , &counter, 0, dictionary, hashTable, tableSize, repeatedHash);
     // switch_characters("lhao\0", accepted , &counter, 2, dictionary, hashTable, tableSize, repeatedHash);
@@ -24,13 +24,13 @@ void test_switch_characters(){
     free_accepted(accepted);
 }
 void test_insert_spaces(){
-    Word * repeatedHash[MAX_LEN_2];
-    clean_array(repeatedHash, MAX_LEN_2);
+    Word * repeatedHash[MAX_LEN];
+    clean_array(repeatedHash, MAX_LEN);
     Word ** accepted = malloc(sizeof(Word *) * 6);
     clean_array(accepted, 6);
     int tableSize = 0, counter = 0;
-    char * dictionary[MAX_LEN];
-    int dicSize = readfile("./tests/diccionario.txt", dictionary);
+    char ** dictionary = malloc(sizeof(char*) * INITIAL_LEN);
+    int dicSize = readfile("./tests/diccionario.txt", &dictionary);
     Word ** hashTable = hash_words(dictionary, dicSize, &tableSize);
     insert_spaces("holacomo\0", accepted, &counter, 0, dictionary, hashTable, tableSize);
     // switch_characters("lhao\0", accepted , &counter, 2, dictionary, hashTable, tableSize, repeatedHash);
@@ -39,13 +39,13 @@ void test_insert_spaces(){
     free_accepted(accepted);
 }
 void test_delete_characters(){
-    Word * repeatedHash[MAX_LEN_2];
-    clean_array(repeatedHash, MAX_LEN_2);
+    Word * repeatedHash[MAX_LEN];
+    clean_array(repeatedHash, MAX_LEN);
     Word ** accepted = malloc(sizeof(Word *) * 6);
     clean_array(accepted, 6);
     int tableSize = 0, counter = 0;
-    char * dictionary[MAX_LEN];
-    int dicSize = readfile("./tests/diccionario.txt", dictionary);
+    char ** dictionary = malloc(sizeof(char*) * INITIAL_LEN);
+    int dicSize = readfile("./tests/diccionario.txt", &dictionary);
     Word ** hashTable = hash_words(dictionary, dicSize, &tableSize);
     delete_characters("holax\0", accepted , &counter, 0, dictionary, hashTable, tableSize, repeatedHash);
     // switch_characters("lhao\0", accepted , &counter, 2, dictionary, hashTable, tableSize, repeatedHash);
@@ -54,13 +54,13 @@ void test_delete_characters(){
     free_accepted(accepted);
 }
 void test_change_characters(){
-    Word * repeatedHash[MAX_LEN_2];
-    clean_array(repeatedHash, MAX_LEN_2);
+    Word * repeatedHash[MAX_LEN];
+    clean_array(repeatedHash, MAX_LEN);
     Word ** accepted = malloc(sizeof(Word *) * 6);
     clean_array(accepted, 6);
     int tableSize = 0, counter = 0;
-    char * dictionary[MAX_LEN];
-    int dicSize = readfile("./tests/diccionario.txt", dictionary);
+    char ** dictionary = malloc(sizeof(char*) * INITIAL_LEN);
+    int dicSize = readfile("./tests/diccionario.txt", &dictionary);
     Word ** hashTable = hash_words(dictionary, dicSize, &tableSize);
     change_characters("holx\0", accepted , &counter, 0, dictionary, hashTable, tableSize, repeatedHash);
     // switch_characters("lhao\0", accepted , &counter, 2, dictionary, hashTable, tableSize, repeatedHash);
@@ -69,13 +69,13 @@ void test_change_characters(){
     free_accepted(accepted);
 }
 void test_insert_characters(){
-    Word * repeatedHash[MAX_LEN_2];
-    clean_array(repeatedHash, MAX_LEN_2);
+    Word * repeatedHash[MAX_LEN];
+    clean_array(repeatedHash, MAX_LEN);
     Word ** accepted = malloc(sizeof(Word *) * 6);
     clean_array(accepted, 6);
     int tableSize = 0, counter = 0;
-    char * dictionary[MAX_LEN];
-    int dicSize = readfile("./tests/diccionario.txt", dictionary);
+    char ** dictionary = malloc(sizeof(char*) * INITIAL_LEN);
+    int dicSize = readfile("./tests/diccionario.txt", &dictionary);
     Word ** hashTable = hash_words(dictionary, dicSize, &tableSize);
     insert_characters("hol\0", accepted , &counter, 0, dictionary, hashTable, tableSize, repeatedHash);
     // switch_characters("lhao\0", accepted , &counter, 2, dictionary, hashTable, tableSize, repeatedHash);
@@ -84,25 +84,25 @@ void test_insert_characters(){
     free_accepted(accepted);
 }
 void test_apply_rules(){
-    Word * repeatedHash[MAX_LEN_2];
-    clean_array(repeatedHash, MAX_LEN_2);
+    Word * repeatedHash[MAX_LEN];
+    clean_array(repeatedHash, MAX_LEN);
     Word ** accepted = malloc(sizeof(Word *) * 6);
     clean_array(accepted, 6);
     int tableSize = 0, counter = 0;
-    char * dictionary[MAX_LEN];
-    int dicSize = readfile("./tests/diccionario.txt", dictionary);
+    char ** dictionary = malloc(sizeof(char*) * INITIAL_LEN);
+    int dicSize = readfile("./tests/diccionario.txt", &dictionary);
     Word ** hashTable = hash_words(dictionary, dicSize, &tableSize);
-    apply_rules(0, "lhao\0", dictionary, hashTable, tableSize, accepted, &counter, repeatedHash);
-    apply_rules(1, "lhao\0", dictionary, hashTable, tableSize, accepted, &counter, repeatedHash);
-    apply_rules(2, "lhao\0", dictionary, hashTable, tableSize, accepted, &counter, repeatedHash);
-    assert(strcmp("hao\0", accepted[0]->word) == 0);
-    assert(strcmp("chao\0", accepted[1]->word) == 0);
-    assert(strcmp("ha\0", accepted[2]->word) == 0);
-    assert(strcmp("aho\0", accepted[3]->word) == 0);
-    assert(strcmp("bao\0", accepted[4]->word) == 0);
+    apply_rules(0, "mnop\0", dictionary, hashTable, tableSize, accepted, &counter, repeatedHash);
+    apply_rules(1, "mnop\0", dictionary, hashTable, tableSize, accepted, &counter, repeatedHash);
+    apply_rules(2, "mnop\0", dictionary, hashTable, tableSize, accepted, &counter, repeatedHash);
+    assert(strcmp("no\0", accepted[0]->word) == 0);
+    assert(strcmp("pop\0", accepted[1]->word) == 0);
+    assert(strcmp("top\0", accepted[2]->word) == 0);
+    assert(strcmp("non\0", accepted[3]->word) == 0);
+    assert(strcmp("nos\0", accepted[4]->word) == 0);
     free_all(dictionary, hashTable, tableSize, dicSize);
     free_accepted(accepted);
-    for(int i = 0; i < MAX_LEN_2; i++){
+    for(int i = 0; i < MAX_LEN; i++){
         free_list(repeatedHash[i]);
     }
 }

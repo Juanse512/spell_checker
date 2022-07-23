@@ -33,13 +33,13 @@ void insert_word_result(char * word, Word ** acceptedWords, int * acceptedWordsS
 void pre_check(char * word, char * dictionary[], Word ** hashTable, int tableSize, Word ** acceptedWords, int * acceptedWordsCounter){
     
     int distance = 0;
-    Word * repeatedHash[MAX_LEN_2];
-    clean_array(repeatedHash, MAX_LEN_2);
+    Word * repeatedHash[MAX_LEN];
+    clean_array(repeatedHash, MAX_LEN);
     while(distance < 3 && *acceptedWordsCounter < 5){
         apply_rules(distance, word, dictionary, hashTable, tableSize, acceptedWords, acceptedWordsCounter, repeatedHash);
         distance++;
     }
-    for(int i = 0; i < MAX_LEN_2; i++){
+    for(int i = 0; i < MAX_LEN; i++){
         free_list(repeatedHash[i]);
     }
     return;
