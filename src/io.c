@@ -49,7 +49,7 @@ int readfile(const char *path, char *** dictionaryP){
     return counter;
 }
 
-int read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * path, int tableSize){
+int read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * path, int tableSize, char * outPath){
     char aux[100];
 	char * parsedWord;
 
@@ -67,7 +67,7 @@ int read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * 
         if(c == '\n' || c == EOF || c == ' '){
             aux[i] = '\0';
             parsedWord = parse_word(aux);
-            check_word(parsedWord, dictionary, hashTable, tableSize, dicSize, line);
+            check_word(parsedWord, dictionary, hashTable, tableSize, dicSize, line, outPath);
             free(parsedWord);
             counter++;
         

@@ -21,7 +21,7 @@ void test_read_suggestion(){
     char ** dictionary = malloc(sizeof(char*) * INITIAL_LEN);
     int dicSize = readfile("./tests/diccionario.txt", &dictionary);
     Word ** hashTable = hash_words(dictionary, dicSize, &tableSize);
-    assert(read_suggestion(hashTable, dictionary, dicSize, "./tests/suggestion.txt", tableSize) == 3);
+    assert(read_suggestion(hashTable, dictionary, dicSize, "./tests/suggestion.txt", tableSize, "testOut.txt") == 3);
     free_all(dictionary, hashTable, tableSize, dicSize);
 }
 

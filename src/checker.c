@@ -53,19 +53,20 @@ Word ** suggest_word(char * word, char * dictionary[], int dicSize, Word ** hash
     return acceptedWords;
 }
 
-void check_word(char * word, char * dictionary[], Word** hashTable, int tableSize, int dicSize, int line){
+void check_word(char * word, char * dictionary[], Word** hashTable, int tableSize, int dicSize, int line, char * outPath){
     Word ** acceptedWords;
     int acceptedWordsCounter = 0;
+    FILE *out;
+    out = fopen(outPath, "a+");
     if(!find_word(word, dictionary, hashTable, tableSize, 0)){
-        printf("Palabra %s en la linea %d es erronea, sugerencias:\n", word, line);
-        printf("---------------------\n");
+        fprintf(out, "Palabra %s en la linea %d es erronea, sugerencias:\n", word, line);
         acceptedWords = suggest_word(word, dictionary, dicSize, hashTable, tableSize, &acceptedWordsCounter);
         for(int i = 0; i < acceptedWordsCounter; i++){
-            printf("%s\n", acceptedWords[i]->word);
+            fprintf(out, "%s\n", acceptedWords[i]->word);
         }
-        printf("---------------------\n");
         free_accepted(acceptedWords);
     }
+    fclose(out);
 }
 
 
