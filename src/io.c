@@ -62,13 +62,17 @@ int read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * 
     
     int flag = 1;
 	int line = 1;
+
+    Word ** repeatedWord = malloc(sizeof(Word *) * tableSize);
+    clean_array(repeatedWord, tableSize);
+
     while (flag) {
         c = getc(f);
         if(c == '\n' || c == EOF || c == ' '){
             aux[i] = '\0';
             parsedWord = parse_word(aux);
-            check_word(parsedWord, dictionary, hashTable, tableSize, dicSize, line, outPath);
-            free(parsedWord);
+            check_word(parsedWord, dictionary, hashTable, tableSize, dicSize, line, outPath, repeatedWord);
+            // free(parsedWord);
             counter++;
         
             i = 0;
@@ -78,6 +82,12 @@ int read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * 
             aux[i++] = c;
         }
 	}
+    
+    for(int i = 0; i < tableSize; i++){
+        free_list(repeatedWord[i]);
+    }
+    free(repeatedWord);
+
     fclose(f);
     return counter;
 }

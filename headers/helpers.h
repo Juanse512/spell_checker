@@ -15,6 +15,7 @@ typedef struct WordStruct{
   struct WordStruct* next;
 } Word;
 
+
 //clean_array: (Word **, int) -> ()
 // Toma un array de punteros y los pone a NULL
 void clean_array(Word ** hashTable, int counter);

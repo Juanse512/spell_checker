@@ -21,9 +21,10 @@ void pre_check(char * word, char * dictionary[], Word ** hashTable, int tableSiz
 // Ademas modifica el contador de palabras aceptadas
 Word ** suggest_word(char * word, char * dictionary[], int dicSize, Word ** hashTable, int tableSize, int * acceptedWordsCounter);
 
-// check_word (char*, char **, Word **, int, int, int) -> ()
+// check_word (char*, char **, Word **, int, int, int, char *, Word**) -> ()
 // Toma una palabra, revisa que sea incorrecta y llama a las funciones necesarias para conseguir sugerencias, luego las imprime
-// Toma una palabra, el diccionario, la tabla hash, el tamaño de la tabla y del diccionario y la linea en la que se encuentra la palabra
-void check_word(char * word, char * dictionary[], Word** hashTable, int tableSize, int dicSize, int line, char * outPath);
+// Toma una palabra, el diccionario, la tabla hash, el tamaño de la tabla y del diccionario y la linea en la que se encuentra la palabra, ademas toma el path del archivo de salida
+// y un array con las palabras ya calculadas
+void check_word(char * word, char * dictionary[], Word** hashTable, int tableSize, int dicSize, int line, char * outPath, Word ** repeatedWord);
 
 #endif
