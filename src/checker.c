@@ -72,6 +72,8 @@ void check_word(char * word, char * dictionary[], Word** hashTable, int tableSiz
     
     FILE *out;
     out = fopen(outPath, "a+");
+    if (out == NULL)
+        quit("Archivo de salida no especificado");
     //Si la palabra no es valida ni la calculamos antes
     if(!find_word(word, dictionary, hashTable, tableSize, 0) && !find_word(word, dictionary, calculatedWords, tableSize, 0)){
         

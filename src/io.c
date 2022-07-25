@@ -18,7 +18,7 @@ int readfile(const char *path, char *** dictionaryP){
     int c, i = 0, counter = 0, size = INITIAL_LEN;
 	
     if (f == NULL)
-        quit("readfile.fopen");
+        quit("Diccionario no especificado");
     
     int flag = 1;
 	
@@ -57,7 +57,7 @@ int read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * 
     int c, i = 0, counter = 0;
 	
     if (f == NULL)
-        quit("readfile.fopen");
+        quit("Archivo de entrada no especificado");
     
     int flag = 1;
 	int line = 1;
