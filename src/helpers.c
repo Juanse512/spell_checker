@@ -54,11 +54,9 @@ char *** check_len(char ** array[], int counter, int * arraySize){
     char ** arrayN = *array;
     if(*arraySize <= counter){
         newSize = (newSize * 3);
-        // printf("IN HERE %d %d\n", counter, newSize);
         arrayN = realloc(arrayN, sizeof(char *) * (newSize));
     }
     *array = arrayN;
-    // printf("OUT %d %d\n", counter, newSize);
     *arraySize = newSize;
     return array;
 }

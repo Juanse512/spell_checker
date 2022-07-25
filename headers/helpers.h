@@ -4,7 +4,7 @@
 #define MAX_LEN 10000
 #define SEED_HASH 13
 //Word:
-// index: indica la posicion de la palabra en el diccionario en la tabla hash original y la distancia en la tabla hash de palabras ya calculadas
+// index: indica el indice de la palabra en el diccionario en la tabla hash original y la distancia a la palabra original en la tabla hash de palabras ya calculadas
 // word: contiene la palabra, no se una en la tabla hash original del diccionario
 // hash: hash de la palabra
 // next: puntero al Word siguiente

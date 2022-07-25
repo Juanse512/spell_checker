@@ -8,17 +8,10 @@
 #include "../headers/checker.h"
 
 unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ){
-	// 'm' and 'r' are mixing constants generated offline.
-	// They're not really 'magic', they just happen to work well.
-
 	const unsigned int m = 0x5bd1e995;
 	const int r = 24;
 
-	// Initialize the hash to a 'random' value
-
 	unsigned int h = seed ^ len;
-
-	// Mix 4 bytes at a time into the hash
 
 	const unsigned char * data = (const unsigned char *)key;
 
@@ -37,8 +30,6 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ){
 		len -= 4;
 	}
 	
-	// Handle the last few bytes of the input array
-
 	switch(len)
 	{
 	case 3: h ^= data[2] << 16;
@@ -47,8 +38,6 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ){
 	        h *= m;
 	};
 
-	// Do a few final mixes of the hash to ensure the last few
-	// bytes are well-incorporated.
 
 	h ^= h >> 13;
 	h *= m;
@@ -60,21 +49,23 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ){
 unsigned int hash_first(char * word){
     
     int len = strlen(word);
+    
     unsigned int hash = MurmurHash2(word, len, SEED_HASH);
+    
     return hash;
 }
 
 
 Word ** hash_words(char * dictionary[], int counter, int * size){
     int tableSize = ceil(counter / 0.7); // factor de carga 0.7
+    
     Word ** hashTable = malloc(sizeof(Word *) * (tableSize + 1));
     
     clean_array(hashTable, tableSize);
     
     unsigned int firstHash = 0, position = 0;
     
-    for(int i = 0; i < counter; i++)
-    {
+    for(int i = 0; i < counter; i++){
         firstHash = hash_first(dictionary[i]);
         
         position = firstHash % tableSize;
@@ -88,13 +79,14 @@ Word ** hash_words(char * dictionary[], int counter, int * size){
 
 int find_word(char * word, char * dictionary[], Word ** hashTable, int tableSize, int index){
     unsigned int first_hash = hash_first(word);
+    
     unsigned int position = first_hash % tableSize;
+    
     int flag = 1;
     
     Word * aux = hashTable[position];
 
-    while(aux != NULL && flag != 0)
-    {
+    while(aux != NULL && flag != 0){
         if(aux->hash == first_hash){
             // Si tengo una palabra en word significa que el index indica la distancia
             if(aux->word != NULL){ 

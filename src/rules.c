@@ -11,8 +11,7 @@ void switch_characters(char * word, Word * acceptedWords[], int * acceptedWordsS
     int len = strlen(word);
     char aux;
     char * wordRule;
-    for(int i = 0; i < len - 1; i++)
-    {
+    for(int i = 0; i < len - 1; i++){
 
         wordRule = malloc(sizeof(char) * (len + 2));
         
@@ -114,6 +113,7 @@ void insert_spaces(char * word, Word * acceptedWords[], int * acceptedWordsSize,
 
         memcpy(firstWord, word, (len - (len - i)) + 1);
         firstWord[(len - (len - i))] = '\0';
+        
         memcpy(secondWord, word + i, (len - i) + 1);
         secondWord[(len - i)] = '\0';
         
@@ -121,10 +121,13 @@ void insert_spaces(char * word, Word * acceptedWords[], int * acceptedWordsSize,
         if(find_word(firstWord, dictionary, hashTable, tableSize, -1) && find_word(secondWord, dictionary, hashTable, tableSize, -1)){
             firstWord[(len - (len - i))] = ' ';
             firstWord[(len - (len - i)) + 1] = '\0';
+            
             char * newWord = malloc(sizeof(char) * (len + 2));
             memcpy(newWord, firstWord, strlen(firstWord) + 1);
             memcpy(newWord + strlen(newWord), secondWord, strlen(secondWord) + 1);
+            
             insert_word_result(newWord, acceptedWords, acceptedWordsSize);
+            
             free(newWord);
         }
         free(firstWord);

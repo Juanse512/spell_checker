@@ -29,7 +29,6 @@ int readfile(const char *path, char *** dictionaryP){
             aux[i] = '\0';
             dictionaryP = check_len(dictionaryP, counter, &size);
             dictionary = *dictionaryP;
-            // printf("%s\n", aux);
             save_word(aux, dictionary, counter);
         
             counter++;
@@ -63,19 +62,23 @@ int read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * 
     int flag = 1;
 	int line = 1;
 
-    Word ** repeatedWord = malloc(sizeof(Word *) * tableSize);
-    clean_array(repeatedWord, tableSize);
+    Word ** calculatedWords = malloc(sizeof(Word *) * tableSize);
+    clean_array(calculatedWords, tableSize);
 
     while (flag) {
         c = getc(f);
         if(c == '\n' || c == EOF || c == ' '){
             aux[i] = '\0';
             parsedWord = parse_word(aux);
-            check_word(parsedWord, dictionary, hashTable, tableSize, dicSize, line, outPath, repeatedWord);
+            
+            check_word(parsedWord, dictionary, hashTable, tableSize, dicSize, line, outPath, calculatedWords);
+            
             counter++;
         
             i = 0;
+            
             if(c == '\n') line++;
+            
             if(c == EOF) flag = 0;
         }else{
             aux[i++] = c;
@@ -83,9 +86,9 @@ int read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * 
 	}
 
     for(int i = 0; i < tableSize; i++){
-        free_list(repeatedWord[i]);
+        free_list(calculatedWords[i]);
     }
-    free(repeatedWord);
+    free(calculatedWords);
 
     fclose(f);
     return counter;
