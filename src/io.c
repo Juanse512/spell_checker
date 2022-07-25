@@ -72,7 +72,6 @@ int read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * 
             aux[i] = '\0';
             parsedWord = parse_word(aux);
             check_word(parsedWord, dictionary, hashTable, tableSize, dicSize, line, outPath, repeatedWord);
-            // free(parsedWord);
             counter++;
         
             i = 0;
@@ -82,7 +81,7 @@ int read_suggestion(Word ** hashTable, char * dictionary[], int dicSize, char * 
             aux[i++] = c;
         }
 	}
-    
+
     for(int i = 0; i < tableSize; i++){
         free_list(repeatedWord[i]);
     }
