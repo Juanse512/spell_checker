@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     
     Word ** hashTable = hash_words(dictionary, dicSize, &tableSize);
     
-    read_suggestion(hashTable, dictionary, dicSize, argv[2], tableSize);
+    read_suggestion(hashTable, dictionary, dicSize, argv[2], tableSize, argv[3]);
 
     free_all(dictionary, hashTable, tableSize, dicSize);
 
