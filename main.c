@@ -13,7 +13,6 @@
 
 int main(int argc, char *argv[])
 {
-    // char * dictionary[MAX_LEN];
     char ** dictionary = malloc(sizeof(char*) * INITIAL_LEN);
 
     int tableSize = 0;
